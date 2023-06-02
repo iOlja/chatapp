@@ -3,66 +3,108 @@ import './App.css';
 import Messages from './Messages';
 import { randomColor, randomName } from './Random';
 import Input from './Input';
-import 'remixicon/fonts/remixicon.css'
-
+import 'remixicon/fonts/remixicon.css';
 
 const App = () => {
-	const [messages, setMessages] = useState([]);
-	const [member, setMember] = useState({
-		username: randomName(),
-		color: randomColor(),
-	});
+  const [messages, setMessages] = useState([]);
+  const [member, setMember] = useState({
+    username: randomName(),
+    color: randomColor(),
+  });
 
-	// Warning - need to use the useMemo hook
-	const drone = useMemo(() => {
-		return new window.Scaledrone('23axSpJJy7sehPRM', {
-			data: member,
-		});
-	}, []);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
-	useEffect(() => {
-		// When drone connection is open > event listeners
-		drone.on('open', (error) => {
-			if (error) {
-				return console.error(error);
-			}
-			const updatedMember = { ...member };
-			updatedMember.id = drone.clientId;
-			setMember(updatedMember);
-		});
+  // Create a drone instance using useMemo to prevent unnecessary re-creation
+  const drone = useMemo(() => {
+    return new window.Scaledrone('23axSpJJy7sehPRM', {
+      data: member,
+    });
+  }, []);
 
-		const room = drone.subscribe('observable-room');
+  useEffect(() => {
+    // When drone connection is open > event listeners
+    drone.on('open', (error) => {
+      if (error) {
+        return console.error(error);
+      }
+      const updatedMember = { ...member };
+      updatedMember.id = drone.clientId;
+      setMember(updatedMember);
+    });
 
-		// Listening... when something comes > update msg state
-		room.on('data', (data, member) => {
-			setMessages((prevMessages) => [
-				...prevMessages,
-				{
-					text: data,
-					member: member,
-					timestamp: Date.now(),
-				},
-			]);
-		});
-	}, [drone, member]);
+    const room = drone.subscribe('observable-room');
 
-	const onSendMessage = (message) => {
-		// Publish message to room
-		if (message.trim() !== '') {
-			drone.publish({
-				room: 'observable-room',
-				message,
-			});
-		}
-	};
+    // Who's online
+    room.on('open', (error) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      console.log('Connected to room');
+    });
 
-	return (
-		<div className="App">
-			<header className="App-header">C H A T A O N I C A 🙈 🙉 🙊</header>
-			<Messages messages={messages} currentMember={member} />
-			<Input onSendMessage={onSendMessage} />
-		</div>
-	);
+    // Update the list of online users when members join
+    room.on('members', (members) => {
+      setOnlineUsers(members);
+    });
+
+    // Add a new member to the online users list when someone joins
+    room.on('member_join', (member) => {
+      setOnlineUsers((prevUsers) => {
+        // Check if the member is already in the list
+        if (prevUsers.some((user) => user.id === member.id)) {
+          return prevUsers; // If already in the list, return the previous state
+        }
+        return [...prevUsers, member]; // If not in the list, add the member
+      });
+    });
+
+    // Remove a member from the online users list when someone leaves
+    room.on('member_leave', ({ id }) => {
+      setOnlineUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+    });
+
+    // Listening... when a new message comes in, update the messages state
+    room.on('data', (data, member) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          text: data,
+          member: member,
+          timestamp: Date.now(),
+        },
+      ]);
+    });
+  }, [drone, member]);
+
+  const onSendMessage = (message) => {
+    // Publish message to the room
+    if (message.trim() !== '') {
+      drone.publish({
+        room: 'observable-room',
+        message,
+      });
+    }
+  };
+
+  return (
+    <div className="App">
+      <header className="App-header">
+			Hello {member.username}!
+          <div className="Welcome">
+           
+						<br/>
+						Currently online and available for a chat are these cool people:
+          </div>
+          <div className="Online-users">
+            {/* Display the usernames of online users */}
+            {onlineUsers.map((user) => user.clientData.username).join(', ')}
+          </div>
+      </header>
+      <Messages messages={messages} currentMember={member} />
+      <Input onSendMessage={onSendMessage} />
+    </div>
+  );
 };
 
 export default App;

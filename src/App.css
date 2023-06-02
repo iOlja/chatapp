@@ -22,15 +22,27 @@ code {
 	background-position: center;
 }
 .App-header {
-  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #454b4611;
-  padding: 20px;
-  text-align: center;
+  background-color: #454b463b;
 	color: whitesmoke;
-	font-size: x-large;
+	font-size: 30px;
+	text-align: center;
+	padding: 5px;
+}
+.Welcome {
+	font-size: 22px;
+	margin-bottom: 5px;
+}
+.Online-users {
+	display: block;
+	color:#52b69a;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 5px;
+	padding: 5px;
 }
 
 .Messages-list {

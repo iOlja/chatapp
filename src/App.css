@@ -1,0 +1,138 @@
+*{
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
+
+.App {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100vh;
+	background-image: url('./b11.jpg');
+	background-size: cover;
+	background-position: center;
+}
+.App-header {
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #454b4611;
+  padding: 20px;
+  text-align: center;
+	color: whitesmoke;
+	font-size: x-large;
+}
+
+.Messages-list {
+	flex-grow: 1;
+	list-style: none;
+	max-width: 900px;
+	margin: 0 auto;
+	overflow: auto;
+	padding: 20px 0;
+	padding-left: 0;
+	width: 100%;
+}
+
+.Messages-message {
+	display: flex;
+	margin-top: 10px;
+}
+
+.Messages-message.currentMember {
+	flex-direction: row-reverse;
+	text-align: right;
+	gap: 10px;
+}
+
+.Message-content {
+	display: inline-block;
+}
+
+.Message-content > .timestamp {
+	display: block;
+	color: #52b69a;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 4px;
+	margin-right: 5px;
+}
+
+.currentMember > .Message-content {
+	align-items: flex-end;
+}
+
+.Messages-message > .avatar {
+	height: 15px;
+	width: 15px;
+	border-radius: 50%;
+	display: inline-block;
+	margin: 0 10px -10px;
+}
+
+.Message-content > .username {
+	display: block;
+	color: #52b69a;
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+.Message-content > .text {
+	padding: 10px;
+	max-width: 400px;
+	margin: 0;
+	border-radius: 3vw 4vw 8vw 2vw;
+	background-color: #7b34ffde;
+	color: whitesmoke;
+	display: inline-block;
+	font-size: 16px;
+	line-height: 1.4;
+}
+
+.currentMember > .Message-content .text {
+	background-color: #1a759fdb;
+	color: whitesmoke;
+}
+
+form {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	max-width: 900px;
+	margin: 0 auto 40px;
+}
+
+input {
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 10px;
+	border: 1px solid #168aad;
+	flex-grow: 1;
+	margin-right: 10px;
+	text-align: center;
+}
+
+button {
+	padding: 10px 20px;
+	font-size: 16px;
+	background-color: #168aad;
+	color: whitesmoke;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #1a759f;
+}
